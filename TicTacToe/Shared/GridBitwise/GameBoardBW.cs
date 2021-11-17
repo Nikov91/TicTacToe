@@ -43,7 +43,7 @@ namespace TicTacToe.Shared.GridBitwise
 
         public void PlaceMark(int index)
         {
-            if (!finished && ((board & (1 << index)) != 0)) // check if bit already set (position is taken)
+            if (finished || ((board & (1 << index)) != 0)) // check if bit already set (position is taken)
                 return;
 
             UpdateCurrentPlayerMoves(index);
