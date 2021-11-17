@@ -1,0 +1,105 @@
+﻿@page "/play/{mode:int}"
+
+<div style="width: 100%; max-width: 400px">
+    <div class="container" style="max-width: 70vh; text-align: center;">
+        <div class="row">
+            <div class="col">
+                <svg viewBox="0 0 950 950">
+                    <rect x="10" y="10" width="930" height="930" rx="25" ry="25" fill="whitesmoke" />
+                    <line x1="12" x2="937" y1="312" y2="312" stroke-width="25" stroke="darkgray" stroke-linecap="round" />
+                    <line x1="12" x2="937" y1="637" y2="637" stroke-width="25" stroke="darkgray" stroke-linecap="round" />
+                    <line x1="312" x2="312" y1="12" y2="937" stroke-width="25" stroke="darkgray" stroke-linecap="round" />
+                    <line x1="637" x2="637" y1="12" y2="937" stroke-width="25" stroke="darkgray" stroke-linecap="round" />
+                    @if (Mode == 1)
+                    {
+                        @for (int index = 0; index < 9; index += 1)
+                        {
+                            <ClickableCell Row="index / 3" Column="index % 3" Play="() => {}" />
+                        }
+                    }
+                    else if (Mode == 2)
+                    {
+                        @for (int col = 0; col < 3; col += 1)
+                        {
+                            @for (int row = 0; row < 3; row += 1)
+                            {
+                                int r = row;
+                                int c = col;
+                                @switch (GameBoard.GetCell(col, row))
+                                {
+                                    case TicTacToe.Shared.GridNormal.GameBoard.Position.None:
+                                        <ClickableCell Row="row" Column="col" Play="() => {GameBoard.PlaceMark(c, r); Refresh();}" />
+                                        break;
+                                    case TicTacToe.Shared.GridNormal.GameBoard.Position.X:
+                                        <HomeCell Row="row" Column="col" />
+                                        break;
+                                    case TicTacToe.Shared.GridNormal.GameBoard.Position.O:
+                                        <AwayCell Row="row" Column="col" />
+                                        break;
+                                }
+                            }
+                        }
+                        var coords = GameBoard.GetLineCoords();
+                        @if (coords != null)
+                        {
+                            <WinningLine FromRow="coords.Value.fromRow" FromCol="coords.Value.fromCol" ToRow="coords.Value.toRow" ToColumn="coords.Value.toCol" />
+                        }
+                    }
+                    else if (Mode == 3)
+                    {
+                        @if (GameBoardBW.State != null)
+                        {
+                            @for (int index = 0; index < GameBoardBW.State.Length; index += 1)
+                            {
+                                @if (GameBoardBW.State[index] == TicTacToe.Shared.GridBitwise.GameBoardBW.Player.X)
+                                {
+                                    <HomeCell Row="index / 3" Column="index % 3" />
+                                }
+                                else if (GameBoardBW.State[index] == TicTacToe.Shared.GridBitwise.GameBoardBW.Player.O)
+                                {
+                                    <AwayCell Row="index / 3" Column="index % 3" />
+                                }
+                                else
+                                {
+                                    int ind = index; // cachez
+                                    <ClickableCell Row="index / 3" Column="index % 3" Play="() => {GameBoardBW.PlaceMark(ind); Refresh();}" />
+                                }
+                            }
+
+                            var coords = GameBoardBW.GetLineCoords();
+                            @if (coords != null)
+                            {
+                                <WinningLine FromRow="coords.Value.fromRow" FromCol="coords.Value.fromCol" ToRow="coords.Value.toRow" ToColumn="coords.Value.toCol" />
+                            }
+                        }
+                    }
+                    else if (Mode == 4)
+                    {
+                    }
+                    else
+                    {
+                        <HomeCell Row="1" Column="1" />
+                        <AwayCell Row="0" Column="1" />
+                        <HomeCell Row="0" Column="0" />
+                        <AwayCell Row="2" Column="2" />
+                        <HomeCell Row="2" Column="0" />
+                        <AwayCell Row="1" Column="0" />
+                        <HomeCell Row="0" Column="2" />
+
+                        <WinningLine FromRow="2" FromCol="0" ToRow="0" ToColumn="2" />
+                    }
+                </svg>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col" style="text-align: right">
+                0 continuation(s)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col" style="text-align: right">
+                <button type="button" class="btn btn-success oi oi-reload" style="padding: 10px; font-weight: bold; color: white" @onclick=@Restart></button>
+            </div>
+        </div>
+    </div>
+</div>

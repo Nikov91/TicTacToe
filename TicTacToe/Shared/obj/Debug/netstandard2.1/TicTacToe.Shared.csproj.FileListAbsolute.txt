@@ -1,0 +1,10 @@
+G:\HORVAT\workshop\initial\TicTacToe\Shared\bin\Debug\netstandard2.1\TicTacToe.Shared.deps.json
+G:\HORVAT\workshop\initial\TicTacToe\Shared\bin\Debug\netstandard2.1\TicTacToe.Shared.dll
+G:\HORVAT\workshop\initial\TicTacToe\Shared\bin\Debug\netstandard2.1\TicTacToe.Shared.pdb
+G:\HORVAT\workshop\initial\TicTacToe\Shared\obj\Debug\netstandard2.1\TicTacToe.Shared.csproj.AssemblyReference.cache
+G:\HORVAT\workshop\initial\TicTacToe\Shared\obj\Debug\netstandard2.1\TicTacToe.Shared.GeneratedMSBuildEditorConfig.editorconfig
+G:\HORVAT\workshop\initial\TicTacToe\Shared\obj\Debug\netstandard2.1\TicTacToe.Shared.AssemblyInfoInputs.cache
+G:\HORVAT\workshop\initial\TicTacToe\Shared\obj\Debug\netstandard2.1\TicTacToe.Shared.AssemblyInfo.cs
+G:\HORVAT\workshop\initial\TicTacToe\Shared\obj\Debug\netstandard2.1\TicTacToe.Shared.csproj.CoreCompileInputs.cache
+G:\HORVAT\workshop\initial\TicTacToe\Shared\obj\Debug\netstandard2.1\TicTacToe.Shared.dll
+G:\HORVAT\workshop\initial\TicTacToe\Shared\obj\Debug\netstandard2.1\TicTacToe.Shared.pdb
