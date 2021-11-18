@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace TicTacToe.Shared.GridNormal
 {
-    public class GameBoard
+    public class MatrixBoard
     {
         private readonly int[][] winCombinations = new int[][]
         {

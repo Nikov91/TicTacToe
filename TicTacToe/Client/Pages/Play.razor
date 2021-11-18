@@ -1,5 +1,8 @@
 ﻿@page "/play/{mode:int}"
-
+@using TicTacToe.Shared.GridBitwise
+@using TicTacToe.Shared.GridNormal
+@using TicTacToe.Shared.FunctionalBoard
+ 
 <div style="width: 100%; max-width: 400px">
     <div class="container" style="max-width: 70vh; text-align: center;">
         <div class="row">
@@ -12,9 +15,22 @@
                     <line x1="637" x2="637" y1="12" y2="937" stroke-width="25" stroke="darkgray" stroke-linecap="round" />
                     @if (Mode == 1)
                     {
-                        @for (int index = 0; index < 9; index += 1)
+                        @foreach (Cell home in this.Board.HomeMoves)
                         {
-                            <ClickableCell Row="index / 3" Column="index % 3" Play="() => {}" />
+                            <HomeCell Row="home.Row" Column="home.Column" />
+                        }
+                        @foreach (Cell away in this.Board.AwayMoves)
+                        {
+                            <AwayCell Row="away.Row" Column="away.Column" />
+                        }
+                        @foreach (Cell playable in this.Board.PlayableCells)
+                        {
+                            <ClickableCell Row="playable.Row" Column="playable.Column" Play="() => { }" />
+                        }
+                        @foreach (Line winningLine in this.Board.WinningLines)
+                        {
+                            <WinningLine FromRow="winningLine.From.Row" FromCol="winningLine.From.Column"
+                                         ToRow="winningLine.To.Row" ToColumn="winningLine.To.Column" />
                         }
                     }
                     else if (Mode == 2)
@@ -25,21 +41,21 @@
                             {
                                 int r = row;
                                 int c = col;
-                                @switch (GameBoard.GetCell(col, row))
+                                @switch (BoardMatrix.GetCell(col, row))
                                 {
-                                    case TicTacToe.Shared.GridNormal.GameBoard.Position.None:
-                                        <ClickableCell Row="row" Column="col" Play="() => {GameBoard.PlaceMark(c, r); Refresh();}" />
+                                    case MatrixBoard.Position.None:
+                                        <ClickableCell Row="row" Column="col" Play="() => {BoardMatrix.PlaceMark(c, r); Refresh();}" />
                                         break;
-                                    case TicTacToe.Shared.GridNormal.GameBoard.Position.X:
+                                    case MatrixBoard.Position.X:
                                         <HomeCell Row="row" Column="col" />
                                         break;
-                                    case TicTacToe.Shared.GridNormal.GameBoard.Position.O:
+                                    case MatrixBoard.Position.O:
                                         <AwayCell Row="row" Column="col" />
                                         break;
                                 }
                             }
                         }
-                        var coords = GameBoard.GetLineCoords();
+                        var coords = BoardMatrix.GetLineCoords();
                         @if (coords != null)
                         {
                             <WinningLine FromRow="coords.Value.fromRow" FromCol="coords.Value.fromCol" ToRow="coords.Value.toRow" ToColumn="coords.Value.toCol" />
@@ -47,24 +63,24 @@
                     }
                     else if (Mode == 3)
                     {
-                        @foreach (var pair in GameBoardBW.GetRowWiseContent().Select((player, index) => (player, index)))
+                        @foreach (var pair in BoardBitwise.GetRowWiseContent().Select((player, index) => (player, index)))
                         {
-                            @if (pair.player == TicTacToe.Shared.GridBitwise.GameBoardBW.Player.X)
+                            @if (pair.player == BitwiseBoard.Player.X)
                             {
                                 <HomeCell Row="pair.index / 3" Column="pair.index % 3" />
                             }
-                            else if (pair.player == TicTacToe.Shared.GridBitwise.GameBoardBW.Player.O)
+                            else if (pair.player == BitwiseBoard.Player.O)
                             {
                                 <AwayCell Row="pair.index / 3" Column="pair.index % 3" />
                             }
                             else
                             {
                                 int ind = pair.index; // cachez
-                                <ClickableCell Row="pair.index / 3" Column="pair.index % 3" Play="() => {GameBoardBW.PlaceMark(ind); Refresh();}" />
+                                <ClickableCell Row="pair.index / 3" Column="pair.index % 3" Play="() => {BoardBitwise.PlaceMark(ind); Refresh();}" />
                             }
                         }
 
-                        var coords = GameBoardBW.GetLineCoords();
+                        var coords = BoardBitwise.GetLineCoords();
                         @if (coords != null)
                         {
                             <WinningLine FromRow="coords.Value.fromRow" FromCol="coords.Value.fromCol" ToRow="coords.Value.toRow" ToColumn="coords.Value.toCol" />

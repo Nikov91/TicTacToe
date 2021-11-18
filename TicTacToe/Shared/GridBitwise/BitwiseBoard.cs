@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace TicTacToe.Shared.GridBitwise
 {
-    public class GameBoardBW
+    public class BitwiseBoard
     {
         private readonly int[] winCombinations = new int[]
         {
@@ -28,7 +28,7 @@ namespace TicTacToe.Shared.GridBitwise
         private Player currentPlayer;
         private bool finished;
 
-        public GameBoardBW()
+        public BitwiseBoard()
         {
             x_moves = 0b000_000_000;
             o_moves = 0b000_000_000;
