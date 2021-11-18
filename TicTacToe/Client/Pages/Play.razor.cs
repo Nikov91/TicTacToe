@@ -15,11 +15,11 @@ namespace TicTacToe.Client.Pages
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
-            CreateBoards();
+            CreateBoard();
         }
 
         // (disclaimer) I don't know razor
-        private void CreateBoards()
+        private void CreateBoard()
         {
             BoardMatrix = new MatrixBoard();
             BoardMatrix.Initialize();

@@ -1,4 +1,4 @@
-﻿namespace TicTacToe.Shared.FunctionalBoard
+﻿namespace TicTacToe.Shared
 {
     public class Line
     {
