@@ -13,26 +13,19 @@ namespace TicTacToe.Client.Pages
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
-            CreateBoardAndInit(Mode);
+            CreateBoards();
         }
 
         // (disclaimer) I don't know razor
-        private void CreateBoardAndInit(int boardType)
+        private void CreateBoards()
         {
-            switch (boardType)
-            {
-                case 2: // normal
-                    GameBoard = new GameBoard();
-                    GameBoard.Initialize();
-                    break;
-                case 3: // bitwise
-                    GameBoardBW = new GameBoardBW();
-                    GameBoardBW.Initialize();
-                    break;
-                default:
-                    break;
-            }
+            GameBoard = new GameBoard();
+            GameBoard.Initialize();
+
+            GameBoardBW = new GameBoardBW();
+            GameBoardBW.Initialize();
         }
+
         public void Refresh()
         {
             StateHasChanged();
@@ -42,7 +35,7 @@ namespace TicTacToe.Client.Pages
         {
             if (Mode == 2)
                 GameBoard.Initialize();
-            if (Mode == 3)
+            else if (Mode == 3)
                 GameBoardBW.Initialize();
 
             Refresh();
