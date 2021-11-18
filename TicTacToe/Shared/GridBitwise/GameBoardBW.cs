@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace TicTacToe.Shared.GridBitwise
@@ -22,19 +23,17 @@ namespace TicTacToe.Shared.GridBitwise
             O
         }
 
-        public Player?[] State { get; private set; }
-        int board, x_moves, o_moves;
+        private int Board => x_moves | o_moves;
+        private int x_moves, o_moves;
         private Player currentPlayer;
         private bool finished;
 
-        public void Initialize()
+        public GameBoardBW()
         {
-            board = 0b000_000_000;
             x_moves = 0b000_000_000;
             o_moves = 0b000_000_000;
             currentPlayer = Player.X;
             finished = false;
-            UpdateState();
         }
 
         private void SwitchTurn() => currentPlayer = currentPlayer == Player.X ? Player.O : Player.X;
@@ -43,19 +42,18 @@ namespace TicTacToe.Shared.GridBitwise
 
         public void PlaceMark(int index)
         {
-            if (finished || ((board & (1 << index)) != 0)) // check if bit already set (position is taken)
+            if (finished || ((Board & (1 << index)) != 0)) // check if bit already set (position is taken)
                 return;
 
             UpdateCurrentPlayerMoves(index);
-            board |= 1 << index; // update taken position to the board
-            UpdateState();
+            GetRowWiseContent();
             if (hasWinner)
             {
                 Console.WriteLine($"{currentPlayer} won");
                 finished = true;
                 return;
             }
-            else if (board >= 511) // check tie (0b111_111_111)
+            else if (Board >= 511) // check tie (0b111_111_111)
             {
                 Console.WriteLine("tie");
                 finished = true;
@@ -85,24 +83,16 @@ namespace TicTacToe.Shared.GridBitwise
             return (fstIndex / 3, fstIndex % 3, lstIndex / 3, lstIndex % 3);
         }
 
-        // needs rework (just for rendering cells)
-        public void UpdateState()
-        {
-            var boardString = new string(Convert.ToString(board, 2).PadLeft(9).Reverse().ToArray());
-            var x_poss = new string(Convert.ToString(x_moves, 2).PadLeft(9).Reverse().ToArray());
-            var o_poss = new string(Convert.ToString(o_moves, 2).PadLeft(9).Reverse().ToArray());
+        private string MovesAsString(int moves) =>
+            new string(Convert.ToString(moves, 2).PadLeft(9).Reverse().ToArray());
 
-            var state = new Player?[boardString.Length];
-            for (int i = 0; i < boardString.Length; i++)
-            {
-                if (x_poss[i] == '1')
-                    state[i] = Player.X;
-                else if (o_poss[i] == '1')
-                    state[i] = Player.O;
-                else
-                    state[i] = null;
-            }
-            State = state;
-        }
+
+        public IEnumerable<Player?> GetRowWiseContent() =>
+            this.MovesAsString(x_moves).Zip(
+                this.MovesAsString(o_moves),
+                (x, o) =>
+                    x == '1' ? Player.X
+                    : o == '1' ? Player.O
+                    : (Player?)null);
     }
 }

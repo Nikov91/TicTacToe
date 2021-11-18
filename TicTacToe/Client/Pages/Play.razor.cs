@@ -8,7 +8,7 @@ namespace TicTacToe.Client.Pages
     {
         [Parameter] public int Mode { get; set; }
         public GameBoard GameBoard { get; private set; } = null;
-        public GameBoardBW GameBoardBW { get; private set; } = null;
+        public GameBoardBW GameBoardBW { get; private set; } = new GameBoardBW();
 
         protected override void OnParametersSet()
         {
@@ -21,9 +21,6 @@ namespace TicTacToe.Client.Pages
         {
             GameBoard = new GameBoard();
             GameBoard.Initialize();
-
-            GameBoardBW = new GameBoardBW();
-            GameBoardBW.Initialize();
         }
 
         public void Refresh()
@@ -36,7 +33,7 @@ namespace TicTacToe.Client.Pages
             if (Mode == 2)
                 GameBoard.Initialize();
             else if (Mode == 3)
-                GameBoardBW.Initialize();
+                GameBoardBW = new GameBoardBW();
 
             Refresh();
         }

@@ -47,30 +47,27 @@
                     }
                     else if (Mode == 3)
                     {
-                        @if (GameBoardBW.State != null)
+                        @foreach (var pair in GameBoardBW.GetRowWiseContent().Select((player, index) => (player, index)))
                         {
-                            @for (int index = 0; index < GameBoardBW.State.Length; index += 1)
+                            @if (pair.player == TicTacToe.Shared.GridBitwise.GameBoardBW.Player.X)
                             {
-                                @if (GameBoardBW.State[index] == TicTacToe.Shared.GridBitwise.GameBoardBW.Player.X)
-                                {
-                                    <HomeCell Row="index / 3" Column="index % 3" />
-                                }
-                                else if (GameBoardBW.State[index] == TicTacToe.Shared.GridBitwise.GameBoardBW.Player.O)
-                                {
-                                    <AwayCell Row="index / 3" Column="index % 3" />
-                                }
-                                else
-                                {
-                                    int ind = index; // cachez
-                                    <ClickableCell Row="index / 3" Column="index % 3" Play="() => {GameBoardBW.PlaceMark(ind); Refresh();}" />
-                                }
+                                <HomeCell Row="pair.index / 3" Column="pair.index % 3" />
                             }
+                            else if (pair.player == TicTacToe.Shared.GridBitwise.GameBoardBW.Player.O)
+                            {
+                                <AwayCell Row="pair.index / 3" Column="pair.index % 3" />
+                            }
+                            else
+                            {
+                                int ind = pair.index; // cachez
+                                <ClickableCell Row="pair.index / 3" Column="pair.index % 3" Play="() => {GameBoardBW.PlaceMark(ind); Refresh();}" />
+                            }
+                        }
 
-                            var coords = GameBoardBW.GetLineCoords();
-                            @if (coords != null)
-                            {
-                                <WinningLine FromRow="coords.Value.fromRow" FromCol="coords.Value.fromCol" ToRow="coords.Value.toRow" ToColumn="coords.Value.toCol" />
-                            }
+                        var coords = GameBoardBW.GetLineCoords();
+                        @if (coords != null)
+                        {
+                            <WinningLine FromRow="coords.Value.fromRow" FromCol="coords.Value.fromCol" ToRow="coords.Value.toRow" ToColumn="coords.Value.toCol" />
                         }
                     }
                     else if (Mode == 4)
