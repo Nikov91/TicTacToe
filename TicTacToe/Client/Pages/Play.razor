@@ -13,7 +13,7 @@
                     <line x1="12" x2="937" y1="637" y2="637" stroke-width="25" stroke="darkgray" stroke-linecap="round" />
                     <line x1="312" x2="312" y1="12" y2="937" stroke-width="25" stroke="darkgray" stroke-linecap="round" />
                     <line x1="637" x2="637" y1="12" y2="937" stroke-width="25" stroke="darkgray" stroke-linecap="round" />
-                    @if (Mode == 1)
+                    @if (Mode == 1 || Mode == 4)
                     {
                         @foreach (Cell home in this.Board.HomeMoves)
                         {
@@ -25,7 +25,7 @@
                         }
                         @foreach (Cell playable in this.Board.PlayableCells)
                         {
-                            <ClickableCell Row="playable.Row" Column="playable.Column" Play="() => { }" />
+                            <ClickableCell Row="playable.Row" Column="playable.Column" Play="() => {Board.Play(playable); Refresh(); }" />
                         }
                         @foreach (Line winningLine in this.Board.WinningLines)
                         {
