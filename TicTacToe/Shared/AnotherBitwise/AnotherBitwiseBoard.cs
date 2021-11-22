@@ -43,7 +43,7 @@ namespace TicTacToe.Shared.AnotherBitwise
 			int position = Base3StringToInt($"{cell.Row}{cell.Column}");
 			_board = _board | _activePlayer << position;
 			_occupied = _occupied | 0b_000_000_001 << position;
-			GetWinner();
+			CheckIfGameIsOver();
 			_activePlayer = playerX ^ _activePlayer;
 		}
 
@@ -72,20 +72,14 @@ namespace TicTacToe.Shared.AnotherBitwise
 		}
 
 
-		private void GetWinner()
+		private void CheckIfGameIsOver()
 		{
 			foreach (var winningPosition in _winningPositions)
 			{
-				if ((_board & winningPosition) == winningPosition)
+				if ((_board & winningPosition) == winningPosition || ((_board ^ _occupied) & winningPosition) == winningPosition)
 				{
 					_isGameOver = true;
-					Console.WriteLine("Player X wins");
-				}
-
-				if (((_board ^ _occupied) & winningPosition) == winningPosition)
-				{
-					_isGameOver = true;
-					Console.WriteLine("Player O wins");
+					break;
 				}
 			}
 		}
