@@ -18,98 +18,76 @@ namespace TicTacToe.Shared.AnotherBitwise
 			0b_001_010_100
 		};
 
-		private int playerX = 0b_000_000_001;
+		private const int PlayerX = 0b_000_000_001;
 		private int _activePlayer = 0b_000_000_001;
 
 		private int _board;
 		private int _occupied;
 		private bool _isGameOver;
 
-		public IEnumerable<Cell> HomeMoves => GetHomeMoves();
-		public IEnumerable<Cell> AwayMoves => GetAwayMoves();
-		public IEnumerable<Cell> PlayableCells => GetPlayableCells();
-		public IEnumerable<Line> WinningLines => GetWinningLines();
+		public IEnumerable<Cell> HomeMoves => Enumerable
+			.Range(0, 9)
+			.Where(c => (_board & (1 << c)) != 0)
+			.Select(c => new Cell(c / 3, c % 3));
+
+		public IEnumerable<Cell> AwayMoves => Enumerable
+			.Range(0, 9)
+			.Where(c => (_board & (1 << c)) == 0 && (_occupied & (1 << c)) != 0)
+			.Select(c => new Cell(c / 3, c % 3));
+
+		public IEnumerable<Cell> PlayableCells => Enumerable
+			.Range(0, 9)
+			.Where(c => (_occupied & (1 << c)) == 0 && !_isGameOver)
+			.Select(c => new Cell(c / 3, c % 3));
+
+		public IEnumerable<Line> WinningLines => _winningPositions
+			.Where(winPos => (winPos & _board) == winPos || ((_board ^ _occupied) & winPos) == winPos)
+			.Select(l =>
+			{
+				var binStr = new string(Convert.ToString(l, 2).PadLeft(9).Reverse().ToArray());
+				var fstIndex = binStr.IndexOf('1');
+				var lstIndex = binStr.LastIndexOf('1');
+				return new Line(new Cell(fstIndex / 3, fstIndex % 3), new Cell(lstIndex / 3, lstIndex % 3));
+			});
 
 		public void Play(Cell cell)
 		{
-			int position = Base3StringToInt($"{cell.Row}{cell.Column}");
-			_board = _board | _activePlayer << position;
-			_occupied = _occupied | 0b_000_000_001 << position;
+			var position = Base3StringToInt($"{cell.Row}{cell.Column}");
+			_board |= _activePlayer << position;
+			_occupied |= 0b_000_000_001 << position;
 			CheckIfGameIsOver();
-			_activePlayer = playerX ^ _activePlayer;
+			_activePlayer = PlayerX ^ _activePlayer;
 		}
-
-		private IEnumerable<Cell> GetPlayableCells()
-		{
-			return Enumerable
-				.Range(0, 9)
-				.Where(c => (_occupied & (1 << c)) == 0 && !_isGameOver)
-				.Select(c => new Cell(c / 3, c % 3));
-		}
-
-		private IEnumerable<Cell> GetHomeMoves()
-		{
-			return Enumerable
-				.Range(0, 9)
-				.Where(c => (_board & (1 << c)) != 0)
-				.Select(c => new Cell(c / 3, c % 3));
-		}
-
-		private IEnumerable<Cell> GetAwayMoves()
-		{
-			return Enumerable
-				.Range(0, 9)
-				.Where(c => (_board & (1 << c)) == 0 && (_occupied & (1 << c)) != 0)
-				.Select(c => new Cell(c / 3, c % 3));
-		}
-
 
 		private void CheckIfGameIsOver()
 		{
 			foreach (var winningPosition in _winningPositions)
 			{
-				if ((_board & winningPosition) == winningPosition || ((_board ^ _occupied) & winningPosition) == winningPosition)
-				{
-					_isGameOver = true;
-					break;
-				}
+				if ((_board & winningPosition) != winningPosition &&
+				    ((_board ^ _occupied) & winningPosition) != winningPosition) continue;
+				_isGameOver = true;
+				break;
 			}
-		}
-
-		private IEnumerable<Line> GetWinningLines()
-		{
-			return _winningPositions
-				.Where(winPos => (winPos & _board) == winPos || ((_board ^ _occupied) & winPos) == winPos)
-				.Select(l =>
-				{
-					var binStr = new string(Convert.ToString(l, 2).PadLeft(9).Reverse().ToArray());
-					var fstIndex = binStr.IndexOf('1');
-					var lstIndex = binStr.LastIndexOf('1');
-					return new Line(new Cell(fstIndex / 3, fstIndex % 3), new Cell(lstIndex / 3, lstIndex % 3));
-				});
 		}
 
 		private static int Base3StringToInt(string base3)
 		{
 			int.TryParse(base3, out var ternary);
 
-			if (ternary != 0)
+			if (ternary == 0) return 0;
+			var result = 0;
+			var i = 0;
+
+			while (ternary != 0)
 			{
-				var result = 0;
-				var i = 0;
-
-				while (ternary != 0)
-				{
-					var remainder = ternary % 10;
-					ternary /= 10;
-					result += remainder *(int) Math.Pow(3, i);
-					++i;
-				}
-
-				return result;
+				var remainder = ternary % 10;
+				ternary /= 10;
+				result += remainder *(int) Math.Pow(3, i);
+				++i;
 			}
-			else
-				return 0;
+
+			return result;
+
 		}
 	}
 }
