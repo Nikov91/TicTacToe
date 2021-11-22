@@ -1,15 +1,15 @@
-﻿namespace TicTacToe.Shared
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace TicTacToe.Shared
 {
-    public class Cell
+    public record Cell(int Row, int Column)
     {
-        public Cell(int row, int column)
-        {
-            this.Row = row;
-            this.Column = column;
-        }
+        public static IEnumerable<Cell> FullMatrix =>
+          Enumerable.Range(0, Constants.Dimensions).SelectMany(FullRow);
 
-        public int Row { get; }
-
-        public int Column { get; }
+        private static IEnumerable<Cell> FullRow(int row) =>
+            Enumerable.Range(0, Constants.Dimensions).Select(col => new Cell(row, col));
     }
 }

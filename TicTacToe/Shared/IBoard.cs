@@ -8,6 +8,6 @@ namespace TicTacToe.Shared
         IEnumerable<Cell> AwayMoves { get; }
         IEnumerable<Cell> PlayableCells { get; }
         IEnumerable<Line> WinningLines { get; }
-        void Play(Cell cell);
+        int CountContinuations();
     }
 }

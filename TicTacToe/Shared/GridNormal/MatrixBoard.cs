@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace TicTacToe.Shared.GridNormal
 {
-    public class MatrixBoard : IBoard
+    public class MatrixBoard : IMutableBoard
     {
         private readonly int[][] winCombinations = new int[][]
         {
@@ -35,7 +35,7 @@ namespace TicTacToe.Shared.GridNormal
         private GameState state;
         private int[] winCombination;
 
-        public void Initialize()
+        public MatrixBoard()
         {
             currentPlayer = Position.X;
             board = GenerateEmptyBoard();
@@ -89,7 +89,7 @@ namespace TicTacToe.Shared.GridNormal
                 return null;
             var from = winCombo[0];
             var to = winCombo[2];
-            return (from % 3, from / 3, to % 3, to / 3);
+            return (from / 3, from % 3, to / 3, to % 3);
         }
 
         public Position GetCell(int x, int y)
@@ -126,5 +126,7 @@ namespace TicTacToe.Shared.GridNormal
         public (int fromRow, int fromCol, int toRow, int toCol)? GetLineCoords() => GenerateWinLine(winCombination);
 
         public void Play(Cell cell) => this.PlaceMark(cell.Row, cell.Column);
+
+        public int CountContinuations() => 0;
     }
 }

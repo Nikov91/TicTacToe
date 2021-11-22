@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace TicTacToe.Shared.GridBitwise
 {
-    public class BitwiseBoard : IBoard
+    public class BitwiseBoard : IMutableBoard
     {
         private readonly int[] winCombinations = new int[]
         {
@@ -115,5 +115,7 @@ namespace TicTacToe.Shared.GridBitwise
 
         public void Play(Cell cell) =>
             this.PlaceMark(cell.Row * 3 + cell.Column);
+
+        public int CountContinuations() => 0;
     }
 }
