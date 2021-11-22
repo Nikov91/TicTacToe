@@ -25,14 +25,6 @@ namespace TicTacToe.Shared.AnotherBitwise
 		private int _occupied;
 		private bool _isGameOver;
 
-		public void Restart()
-		{
-			_board = 0b_000_000_000;
-			_occupied = 0b_000_000_000;
-			_activePlayer = playerX;
-			_isGameOver = false;
-		}
-
 		public IEnumerable<Cell> HomeMoves => GetHomeMoves();
 		public IEnumerable<Cell> AwayMoves => GetAwayMoves();
 		public IEnumerable<Cell> PlayableCells => GetPlayableCells();
