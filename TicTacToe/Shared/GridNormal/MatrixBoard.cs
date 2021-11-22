@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace TicTacToe.Shared.GridNormal
 {
-    public class MatrixBoard
+    public class MatrixBoard : IBoard
     {
         private readonly int[][] winCombinations = new int[][]
         {
@@ -57,6 +58,25 @@ namespace TicTacToe.Shared.GridNormal
         private void SwitchTurn() => currentPlayer = currentPlayer == Position.X ? Position.O : Position.X;
         private bool AreAllFieldsTaken => board.All(r => r.All(c => c != Position.None));
 
+        public IEnumerable<Cell> HomeMoves => this.GetCells(Position.X);
+
+        public IEnumerable<Cell> AwayMoves => this.GetCells(Position.O);
+
+        public IEnumerable<Cell> PlayableCells => this.GetCells(Position.None);
+
+        private IEnumerable<Cell> GetCells(Position containing)
+        {
+            for (int row = 0; row < this.board.Length; row += 1)
+                for (int col = 0; col < this.board[row].Length; col += 1)
+                    if (this.board[row][col] == containing)
+                        yield return new Cell(row, col);
+        }
+
+        public IEnumerable<Line> WinningLines =>
+            this.GetLineCoords() is (int fromRow, int fromCol, int toRow, int toCol)
+                ? new[] { new Line(new Cell(fromRow, fromCol), new Cell(toRow, toCol)) }
+                : Enumerable.Empty<Line>();
+
         private int[] GetWinCombination()
         {
             var flattenBoard = board.SelectMany(b => b).ToArray();
@@ -104,5 +124,7 @@ namespace TicTacToe.Shared.GridNormal
         }
 
         public (int fromRow, int fromCol, int toRow, int toCol)? GetLineCoords() => GenerateWinLine(winCombination);
+
+        public void Play(Cell cell) => this.PlaceMark(cell.Row, cell.Column);
     }
 }
