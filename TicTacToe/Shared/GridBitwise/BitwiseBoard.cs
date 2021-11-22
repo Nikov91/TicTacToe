@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace TicTacToe.Shared.GridBitwise
 {
-    public class BitwiseBoard
+    public class BitwiseBoard : IBoard
     {
         private readonly int[] winCombinations = new int[]
         {
@@ -39,6 +39,24 @@ namespace TicTacToe.Shared.GridBitwise
         private void SwitchTurn() => currentPlayer = currentPlayer == Player.X ? Player.O : Player.X;
         private bool hasWinner => winCombinations.Any(posMask => (posMask & CurrentPlayerMoves) == posMask); // bitmask check
         int CurrentPlayerMoves => currentPlayer == Player.X ? x_moves : o_moves;
+
+        public IEnumerable<Cell> HomeMoves => this.CellsBelongingTo(Player.X);
+
+        public IEnumerable<Cell> AwayMoves => this.CellsBelongingTo(Player.O);
+
+        public IEnumerable<Cell> PlayableCells => this.CellsBelongingTo(null);
+
+        private IEnumerable<Cell> CellsBelongingTo(Player? player) =>
+            this.GetRowWiseContent()
+                .Select((player, index) => (player, index))
+                .Where(tuple => tuple.player == player)
+                .Select(tuple => (row: tuple.index / 3, col: tuple.index % 3))
+                .Select(cell => new Cell(cell.row, cell.col));
+
+        public IEnumerable<Line> WinningLines =>
+            this.GetLineCoords() is (int fromRow, int fromCol, int toRow, int toCol)
+                ? new[] { new Line(new Cell(fromRow, fromCol), new Cell(toRow, toCol)) }
+                : Enumerable.Empty<Line>();
 
         public void PlaceMark(int index)
         {
@@ -94,5 +112,8 @@ namespace TicTacToe.Shared.GridBitwise
                     x == '1' ? Player.X
                     : o == '1' ? Player.O
                     : (Player?)null);
+
+        public void Play(Cell cell) =>
+            this.PlaceMark(cell.Row * 3 + cell.Column);
     }
 }
