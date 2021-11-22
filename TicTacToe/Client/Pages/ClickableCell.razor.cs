@@ -5,11 +5,11 @@ namespace TicTacToe.Client.Pages
 {
     public partial class ClickableCell
     {
-        [Parameter] public Action Play { get; set; }
+        [Parameter] public EventCallback Play { get; set; }
 
         private void Clicked()
         {
-            this.Play.Invoke();
+            this.Play.InvokeAsync();
         }
     }
 }

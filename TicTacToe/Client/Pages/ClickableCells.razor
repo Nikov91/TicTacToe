@@ -1,0 +1,12 @@
+﻿@using TicTacToe.Shared
+@inherits MultiCellComponentBase
+@foreach (Cell clickable in this.Cells)
+{
+    <ClickableCell Location="clickable" Play="() => this.OnClicked(clickable)" />
+}
+@code {
+    [Parameter] public EventCallback<Cell> Clicked { get; set; }
+
+    private void OnClicked(Cell location) =>
+        this.Clicked.InvokeAsync(location);
+}

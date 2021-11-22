@@ -1,0 +1,11 @@
+﻿@using TicTacToe.Shared
+@using System.Collections.Generic
+@foreach (Line line in this.Lines)
+{ 
+    <WinningLine Line="line" />
+}
+
+
+@code { 
+    [Parameter] public IEnumerable<Line> Lines { get; set; }
+}

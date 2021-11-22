@@ -1,0 +1,6 @@
+﻿@using TicTacToe.Shared
+@inherits MultiCellComponentBase
+@foreach (Cell cell in this.Cells)
+{
+    <AwayCell Location="cell" />
+}

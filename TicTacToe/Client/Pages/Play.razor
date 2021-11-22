@@ -1,8 +1,4 @@
 ﻿@page "/play/{mode:int}"
-@using TicTacToe.Shared.GridBitwise
-@using TicTacToe.Shared.GridNormal
-@using TicTacToe.Shared
- 
 <div style="width: 100%; max-width: 400px">
     <div class="container" style="max-width: 70vh; text-align: center;">
         <div class="row">
@@ -13,23 +9,10 @@
                     <line x1="12" x2="937" y1="637" y2="637" stroke-width="25" stroke="darkgray" stroke-linecap="round" />
                     <line x1="312" x2="312" y1="12" y2="937" stroke-width="25" stroke="darkgray" stroke-linecap="round" />
                     <line x1="637" x2="637" y1="12" y2="937" stroke-width="25" stroke="darkgray" stroke-linecap="round" />
-                    @foreach (Cell home in this.Board.HomeMoves)
-                    {
-                        <HomeCell Row="home.Row" Column="home.Column" />
-                    }
-                    @foreach (Cell away in this.Board.AwayMoves)
-                    {
-                        <AwayCell Row="away.Row" Column="away.Column" />
-                    }
-                    @foreach (Cell playable in this.Board.PlayableCells)
-                    {
-                        <ClickableCell Row="playable.Row" Column="playable.Column" Play="() => this.MakeMove(playable)" />
-                    }
-                    @foreach (Line winningLine in this.Board.WinningLines)
-                    {
-                        <WinningLine FromRow="winningLine.From.Row" FromCol="winningLine.From.Column"
-                                        ToRow="winningLine.To.Row" ToColumn="winningLine.To.Column" />
-                    }
+                    <HomeCells Cells="this.Board.HomeMoves" />
+                    <AwayCells Cells="this.Board.AwayMoves" />
+                    <ClickableCells Cells="this.Board.PlayableCells" Clicked="this.MakeMove" />
+                    <WinningLines Lines="this.Board.WinningLines" />
                 </svg>
             </div>
         </div>
