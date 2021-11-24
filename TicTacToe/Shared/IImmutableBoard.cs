@@ -1,7 +1,9 @@
-﻿namespace TicTacToe.Shared
+﻿using System.Collections.Generic;
+
+namespace TicTacToe.Shared
 {
     public interface IImmutableBoard : IBoard
     {
-        IImmutableBoard Play(Cell cell);
+        IEnumerable<IMove> PossibleMoves { get; }
     }
 }

@@ -8,14 +8,14 @@ namespace TicTacToe.Shared.AnotherBitwise
     {
         private readonly uint[] _winningPositions = new uint[]
         {
-      0b_111_000_000,
-      0b_000_111_000,
-      0b_000_000_111,
-      0b_100_100_100,
-      0b_010_010_010,
-      0b_001_001_001,
-      0b_100_010_001,
-      0b_001_010_100
+            0b_111_000_000,
+            0b_000_111_000,
+            0b_000_000_111,
+            0b_100_100_100,
+            0b_010_010_010,
+            0b_001_001_001,
+            0b_100_010_001,
+            0b_001_010_100
         };
 
         private const int PlayerX = 0b_000_000_001;
@@ -28,7 +28,7 @@ namespace TicTacToe.Shared.AnotherBitwise
         public IEnumerable<Cell> HomeMoves => Enumerable
           .Range(0, 9)
           .Where(c => (_board & (1 << c)) != 0)
-          .Select(c => new Cell(c / 3, c % 3));
+          .Select(c => new Cell(c / Constants.Dimension, c % Constants.Dimension));
 
         public IEnumerable<Cell> AwayMoves => Enumerable
           .Range(0, 9)

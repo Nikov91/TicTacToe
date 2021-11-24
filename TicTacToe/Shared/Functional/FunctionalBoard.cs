@@ -27,12 +27,37 @@ namespace TicTacToe.Shared.Functional
                 .Select(tuple => tuple.move);
 
         public IEnumerable<Cell> PlayableCells =>
-          Cell.FullMatrix.Except(this.Moves);
+            this.WinningLines.Any() ? Enumerable.Empty<Cell>()
+            : Cell.FullMatrix.Except(this.Moves);
 
-        public IEnumerable<Line> WinningLines => Enumerable.Empty<Line>();
+            //this.WinningLines
+            //    .Select(_ => Enumerable.Empty<Cell>())
+            //    .DefaultIfEmpty(Cell.FullMatrix.Except(this.Moves))
+            //    .First();
 
-        public IImmutableBoard Play(Cell cell) =>
+        public IEnumerable<Line> WinningLines =>
+            this.WinningLinesFrom(this.HomeMoves).Concat(
+                this.WinningLinesFrom(this.AwayMoves));
+
+        private IEnumerable<Line> WinningLinesFrom(IEnumerable<Cell> moves) =>
+            moves.SelectMany(cell => cell.Lines)
+                .GroupBy(line => line)
+                .Where(group => group.Count() == Constants.Dimension)
+                .Select(group => group.Key);
+
+        private IImmutableBoard Play(Cell cell) =>
             new FunctionalBoard(this.Moves.Add(cell));
+
+        //public IEnumerable<IImmutableBoard> PlayableSelf() =>
+        //    this.PlayableCells.Any() ? new[] { this }
+        //    : Enumerable.Empty<IImmutableBoard>();
+
+        //public IEnumerable<object> ViolatedRules(IMove move) =>
+        //    Enumerable.Empty<object>();
+
+        public IEnumerable<IMove> PossibleMoves =>
+            this.PlayableCells
+                .Select(cell => new FunctionalMove(cell, this.Play));
 
         public int CountContinuations() => 0;
     }

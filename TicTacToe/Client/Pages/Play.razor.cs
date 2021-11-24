@@ -37,16 +37,17 @@ namespace TicTacToe.Client.Pages
 
         private void MakeMove(Cell location)
         {
-            if (this.Board is IImmutableBoard immutable)
-            {
-                this.Board = immutable.Play(location);
-            }
-            else if (this.Board is IMutableBoard mutable)
+            if (this.Board is IMutableBoard mutable)
             {
                 mutable.Play(location);
             }
 
             this.Refresh();
+        }
+
+        private void Make(IMove move)
+        {
+            this.Board = move.Make();
         }
 
         private void Restart()

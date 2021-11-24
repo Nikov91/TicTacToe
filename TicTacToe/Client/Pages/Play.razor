@@ -1,4 +1,5 @@
 ﻿@page "/play/{mode:int}"
+@using TicTacToe.Shared
 <div style="width: 100%; max-width: 400px">
     <div class="container" style="max-width: 70vh; text-align: center;">
         <div class="row">
@@ -11,7 +12,17 @@
                     <line x1="637" x2="637" y1="12" y2="937" stroke-width="25" stroke="darkgray" stroke-linecap="round" />
                     <HomeCells Cells="this.Board.HomeMoves" />
                     <AwayCells Cells="this.Board.AwayMoves" />
-                    <ClickableCells Cells="this.Board.PlayableCells" Clicked="this.MakeMove" />
+                    @if (this.Board is IImmutableBoard board)
+                    {
+                        @foreach (IMove move in board.PossibleMoves)
+                        {
+                            <ClickableCell Location="move.Location" Play="() => this.Make(move)"/>
+                        }
+                    }
+                    else
+                    {
+                        <ClickableCells Cells="this.Board.PlayableCells" Clicked="this.MakeMove" />
+                    }
                     <WinningLines Lines="this.Board.WinningLines" />
                 </svg>
             </div>
