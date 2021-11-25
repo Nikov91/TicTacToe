@@ -2,7 +2,7 @@
 
 namespace TicTacToe.Shared.Functional
 {
-    class FunctionalMove : IMove
+    public class FunctionalMove : IMove
     {
         public FunctionalMove(Cell location, Func<Cell, FunctionalBoard> map)
         {
@@ -13,8 +13,7 @@ namespace TicTacToe.Shared.Functional
         public Cell Location { get; }
         private Func<Cell, FunctionalBoard> Map { get; }
 
-        public IImmutableBoard Make() => this.MakeConcrete();
-
-        public FunctionalBoard MakeConcrete() => this.Map(this.Location);
+        IImmutableBoard IMove.Make() => this.Make();
+        public FunctionalBoard Make() => this.Map(this.Location);
     }
 }

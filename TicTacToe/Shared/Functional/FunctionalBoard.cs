@@ -59,10 +59,9 @@ namespace TicTacToe.Shared.Functional
         //public IEnumerable<object> ViolatedRules(IMove move) =>
         //    Enumerable.Empty<object>();
 
-        public IEnumerable<IMove> PossibleMoves =>
-            this.PossibleConcreteMoves;
+        IEnumerable<IMove>  IImmutableBoard.PossibleMoves => this.PossibleMoves;
 
-        private IEnumerable<FunctionalMove> PossibleConcreteMoves =>
+        public IEnumerable<FunctionalMove> PossibleMoves =>
             this.PlayableCells
                 .Select(cell => new FunctionalMove(cell, this.PlayConcrete));
 
@@ -78,14 +77,12 @@ namespace TicTacToe.Shared.Functional
 
         private int FullContinuationsCount(int weight)
         {
-            int count = this.PossibleConcreteMoves
-                .Select(move => move.MakeConcrete())
+            int count = this.PossibleMoves
+                .Select(move => move.Make())
                 .Select(next => next.CountContinuations(1))
                 .DefaultIfEmpty(weight)
                 .Sum();
             PositionToContinuationsCount[this] = count;
-            if (PositionToContinuationsCount.Count % 1000 == 0)
-                Console.WriteLine(PositionToContinuationsCount.Count);
             return count;
         }
 
