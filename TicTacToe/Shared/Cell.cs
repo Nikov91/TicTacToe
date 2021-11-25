@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace TicTacToe.Shared
 {
-    public record Cell
+    public record Cell : IComparable<Cell>
     {
         public Cell(int row, int column)
         {
@@ -36,5 +36,9 @@ namespace TicTacToe.Shared
 
         private static IEnumerable<Cell> FullRow(int row) =>
             Enumerable.Range(0, Constants.Dimension).Select(col => new Cell(row, col));
+
+        public int CompareTo(Cell other) =>
+            this.Row.CompareTo(other.Row) == 0 ? this.Column.CompareTo(other.Column)
+            : this.Row.CompareTo(other.Row);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -46,6 +47,9 @@ namespace TicTacToe.Shared.Functional
                 .Select(group => group.Key);
 
         private IImmutableBoard Play(Cell cell) =>
+            this.PlayConcrete(cell);
+
+        private FunctionalBoard PlayConcrete(Cell cell) =>
             new FunctionalBoard(this.Moves.Add(cell));
 
         //public IEnumerable<IImmutableBoard> PlayableSelf() =>
@@ -56,9 +60,39 @@ namespace TicTacToe.Shared.Functional
         //    Enumerable.Empty<object>();
 
         public IEnumerable<IMove> PossibleMoves =>
-            this.PlayableCells
-                .Select(cell => new FunctionalMove(cell, this.Play));
+            this.PossibleConcreteMoves;
 
-        public int CountContinuations() => 0;
+        private IEnumerable<FunctionalMove> PossibleConcreteMoves =>
+            this.PlayableCells
+                .Select(cell => new FunctionalMove(cell, this.PlayConcrete));
+
+        private static IDictionary<FunctionalBoard, int> PositionToContinuationsCount { get; } =
+            new Dictionary<FunctionalBoard, int>(PositionComparer);
+
+        public int CountContinuations() =>
+            this.FullContinuationsCount(0);
+
+        private int CountContinuations(int weight) =>
+            PositionToContinuationsCount.TryGetValue(this, out int count) ? count
+            : this.FullContinuationsCount(weight);
+
+        private int FullContinuationsCount(int weight)
+        {
+            int count = this.PossibleConcreteMoves
+                .Select(move => move.MakeConcrete())
+                .Select(next => next.CountContinuations(1))
+                .DefaultIfEmpty(weight)
+                .Sum();
+            PositionToContinuationsCount[this] = count;
+            if (PositionToContinuationsCount.Count % 1000 == 0)
+                Console.WriteLine(PositionToContinuationsCount.Count);
+            return count;
+        }
+
+        public static IEqualityComparer<FunctionalBoard> PositionComparer =>
+            new FunctionalBoardPositionEquality();
+
+        public static IEqualityComparer<FunctionalBoard> GameComparer =>
+            new FunctionalBoardGameEquality();
     }
 }
